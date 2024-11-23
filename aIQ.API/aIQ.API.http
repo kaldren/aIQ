@@ -1,0 +1,6 @@
+@aIQ.API_HostAddress = http://localhost:5209
+
+GET {{aIQ.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
