@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\aIQ.Application\aIQ.Application.csproj" />
+    <ProjectReference Include="..\aIQ.Infrastructure\aIQ.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

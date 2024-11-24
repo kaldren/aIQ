@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ardalis.Result;
+using MediatR;
 
 namespace aIQ.Application.Features.Settings.ChangePassword;
-internal class ChangePasswordCommand
+
+public sealed record ChangePasswordCommand : IRequest<Result<ChangePasswordResponse>>
 {
+    public required ChangePasswordRequest Request { get; init; }
 }
