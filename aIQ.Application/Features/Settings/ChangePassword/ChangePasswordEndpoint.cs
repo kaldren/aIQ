@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using MediatR;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
@@ -8,9 +9,18 @@ public static class ChangePasswordEndpoint
 {
     public static void MapChangePasswordEndpoint(this WebApplication app)
     {
-        app.MapPut("/api/settings/change-password", async (ChangePasswordRequest request) =>
+        app.MapPut("/api/settings/change-password", async (ChangePasswordRequest request, ISender sender) =>
         {
-            return Results.Ok($"Your old password is {request.CurrentPassword}, your new password is {request.NewPassword}, and your confirmation password is {request.ConfirmPassword}");
+            var validationResult = await new ChangePasswordRequestValidator().ValidateAsync(request);
+
+            var result = await sender.Send(new ChangePasswordCommand() { Request = request});
+
+            if (result.IsSuccess == false)
+            {
+                return Results.BadRequest(result.ValidationErrors);
+            }
+
+            return Results.NoContent();
         });
     }
 }

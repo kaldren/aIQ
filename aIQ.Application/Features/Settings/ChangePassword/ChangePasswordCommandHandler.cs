@@ -1,11 +1,12 @@
-﻿using Ardalis.Result;
+﻿using aIQ.Domain.Users;
+using Ardalis.Result;
 using Ardalis.Result.FluentValidation;
 using FluentValidation;
 using MediatR;
 
 namespace aIQ.Application.Features.Settings.ChangePassword;
 
-public sealed record ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, Result<ChangePasswordResponse>>
+public sealed record ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, Result>
 {
     private readonly IValidator<ChangePasswordCommand> _validator;
 
@@ -14,7 +15,7 @@ public sealed record ChangePasswordCommandHandler : IRequestHandler<ChangePasswo
         _validator = validator;
     }
 
-    public async Task<Result<ChangePasswordResponse>> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         
@@ -23,6 +24,9 @@ public sealed record ChangePasswordCommandHandler : IRequestHandler<ChangePasswo
             return Result.Invalid(validationResult.AsErrors());
         }
 
-        return Result<ChangePasswordResponse>.Success(new ChangePasswordResponse());
+        var user = new User();
+        user.ChangePassword(request.Request.NewPassword);
+
+        return Result.NoContent();
     }
 }
